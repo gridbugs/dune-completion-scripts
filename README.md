@@ -1,6 +1,6 @@
 # Dune Completion Scripts
 
-Bash completion scripts for [Dune](https://github.com/ocaml/dune).
+Shell completion scripts for [Dune](https://github.com/ocaml/dune).
 
 ## Installation
 
