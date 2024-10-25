@@ -44,5 +44,10 @@ dune.exe internal print-completion-script-bash \
   --program-name=dune \
   --program-exe-for-reentrant-query=dune \
   --global-symbol-prefix=_dune_ \
-  --no-command-hash-in-function-names
+  --no-command-hash-in-function-names \
+  --minify-global-names \
+  --minify-local-variables \
+  --no-comments \
+  --no-whitespace \
+  --optimize-case-statements
 ```
