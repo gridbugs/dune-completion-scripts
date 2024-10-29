@@ -8,6 +8,10 @@ The file `bash.sh` contains the bash completion script. Source it in your shell
 to add completion suggestions for Dune to your current session. The easiest way
 to enable this all the time is to source the file from your shell rc file.
 
+If sourcing a large, minified bash script you found on the internet makes you
+nervous, there's an [unminified version of the script](bash-unminified.sh)
+that's more auditable.
+
 ### Bash
 
 Add the following to your `~/.bashrc`:
