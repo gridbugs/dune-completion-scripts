@@ -8,7 +8,7 @@ elif [ "$(_dune_f)" -lt 2 ]; then
 _dune_e "Unexpected length of \$COMP_WORDS array: ${#COMP_WORDS[@]}. Its length should be at least 2 since the first element should always be the program name, and the second element will be the first word after the program name, which is expected to be the empty string if no additional words have been entered after the program name."
 else
 _dune_k
-_dune_pc "$1" "$2" "$3"
+_dune_tc "$1" "$2" "$3"
 case "$?" in
 100)
 :
@@ -62,6 +62,7 @@ test "$_dune_h" -gt "$COMP_CWORD"
 }
 _dune_n() {
 COMPREPLY+=($(compgen -A file -- "$1"))
+compopt -o filenames
 }
 _dune_o() {
 COMPREPLY+=($(compgen -W "$2" -- "$1"))
@@ -2880,8 +2881,63 @@ if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_o "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts"
 _dune_Ta "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_Va() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_Wa() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_o "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts"
+_dune_Va "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
 fi
@@ -2957,6 +3013,10 @@ contexts)
 _dune_Sa "$1" "$2" "$3"
 return "$?"
 ;;
+depexts)
+_dune_Ua "$1" "$2" "$3"
+return "$?"
+;;
 -*)
 p=0
 ;;
@@ -2970,21 +3030,21 @@ esac
 fi
 done
 }
-_dune_Va() {
+_dune_Xa() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_Wa() {
+_dune_Ya() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Va "$2" "$i"
+_dune_Xa "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
 fi
@@ -3025,7 +3085,7 @@ esac
 fi
 done
 }
-_dune_Xa() {
+_dune_Za() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -3072,7 +3132,7 @@ esac
 fi
 done
 }
-_dune_Ya() {
+_dune__b() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -3119,21 +3179,21 @@ esac
 fi
 done
 }
-_dune_Za() {
+_dune_ab() {
 case "$2" in
 0)
 _dune_n "$1"
 ;;
 esac
 }
-_dune__b() {
+_dune_bb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Za "$2" "$i"
+_dune_ab "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -3174,21 +3234,21 @@ esac
 fi
 done
 }
-_dune_ab() {
+_dune_cb() {
 case "$2" in
 0)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_bb() {
+_dune_db() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_ab "$2" "$i"
+_dune_cb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -3229,21 +3289,21 @@ esac
 fi
 done
 }
-_dune_cb() {
+_dune_eb() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_db() {
+_dune_fb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_cb "$2" "$i"
+_dune_eb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
 fi
@@ -3284,7 +3344,7 @@ esac
 fi
 done
 }
-_dune_eb() {
+_dune_gb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -3316,61 +3376,6 @@ esac
 fi
 case "$w" in
 --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_fb() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_gb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_fb "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache | --context)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
 p=1
 ;;
 -*)
@@ -3442,6 +3447,61 @@ fi
 done
 }
 _dune_jb() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_kb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_jb "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache | --context)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_lb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -3488,21 +3548,21 @@ esac
 fi
 done
 }
-_dune_kb() {
+_dune_mb() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_lb() {
+_dune_nb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_kb "$2" "$i"
+_dune_mb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -3543,21 +3603,21 @@ esac
 fi
 done
 }
-_dune_mb() {
+_dune_ob() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_nb() {
+_dune_pb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_mb "$2" "$i"
+_dune_ob "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -3584,109 +3644,6 @@ fi
 case "$w" in
 --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
 p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_ob() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_pb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_o "$2" "lock list-locked-dependencies dependency-hash"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--help -h"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
-esac
-fi
-case "$w" in
---help | -h)
-p=1
-;;
-lock)
-_dune_lb "$1" "$2" "$3"
-return "$?"
-;;
-list-locked-dependencies)
-_dune_nb "$1" "$2" "$3"
-return "$?"
-;;
-dependency-hash)
-_dune_ob "$1" "$2" "$3"
-return "$?"
 ;;
 -*)
 p=0
@@ -3755,7 +3712,7 @@ if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_o "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts"
+_dune_o "$2" "lock list-locked-dependencies dependency-hash"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--help -h"
 fi
@@ -3779,51 +3736,15 @@ case "$w" in
 --help | -h)
 p=1
 ;;
-workspace)
-_dune_Wa "$1" "$2" "$3"
+lock)
+_dune_nb "$1" "$2" "$3"
 return "$?"
 ;;
-external-lib-deps)
-_dune_Xa "$1" "$2" "$3"
-return "$?"
-;;
-opam-files)
-_dune_Ya "$1" "$2" "$3"
-return "$?"
-;;
-pp)
-_dune__b "$1" "$2" "$3"
-return "$?"
-;;
-env)
-_dune_bb "$1" "$2" "$3"
-return "$?"
-;;
-rules)
-_dune_db "$1" "$2" "$3"
-return "$?"
-;;
-installed-libraries)
-_dune_eb "$1" "$2" "$3"
-return "$?"
-;;
-targets)
-_dune_gb "$1" "$2" "$3"
-return "$?"
-;;
-aliases)
-_dune_ib "$1" "$2" "$3"
-return "$?"
-;;
-package-entries)
-_dune_jb "$1" "$2" "$3"
-return "$?"
-;;
-pkg)
+list-locked-dependencies)
 _dune_pb "$1" "$2" "$3"
 return "$?"
 ;;
-contexts)
+dependency-hash)
 _dune_qb "$1" "$2" "$3"
 return "$?"
 ;;
@@ -3841,108 +3762,6 @@ fi
 done
 }
 _dune_sb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --all --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --all)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_tb() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_ub() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_tb "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --wait | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_vb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -3989,77 +3808,21 @@ esac
 fi
 done
 }
-_dune_wb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_o "$2" "status build ping"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--help -h"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
-esac
-fi
-case "$w" in
---help | -h)
-p=1
-;;
-status)
-_dune_sb "$1" "$2" "$3"
-return "$?"
-;;
-build)
-_dune_ub "$1" "$2" "$3"
-return "$?"
-;;
-ping)
-_dune_vb "$1" "$2" "$3"
-return "$?"
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_xb() {
+_dune_tb() {
 case "$2" in
-0)
+*)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_yb() {
+_dune_ub() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_xb "$2" "$i"
+_dune_tb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4100,7 +3863,363 @@ esac
 fi
 done
 }
+_dune_vb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_o "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--help -h"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+esac
+fi
+case "$w" in
+--help | -h)
+p=1
+;;
+workspace)
+_dune_Ya "$1" "$2" "$3"
+return "$?"
+;;
+external-lib-deps)
+_dune_Za "$1" "$2" "$3"
+return "$?"
+;;
+opam-files)
+_dune__b "$1" "$2" "$3"
+return "$?"
+;;
+pp)
+_dune_bb "$1" "$2" "$3"
+return "$?"
+;;
+env)
+_dune_db "$1" "$2" "$3"
+return "$?"
+;;
+rules)
+_dune_fb "$1" "$2" "$3"
+return "$?"
+;;
+installed-libraries)
+_dune_gb "$1" "$2" "$3"
+return "$?"
+;;
+targets)
+_dune_ib "$1" "$2" "$3"
+return "$?"
+;;
+aliases)
+_dune_kb "$1" "$2" "$3"
+return "$?"
+;;
+package-entries)
+_dune_lb "$1" "$2" "$3"
+return "$?"
+;;
+pkg)
+_dune_rb "$1" "$2" "$3"
+return "$?"
+;;
+contexts)
+_dune_sb "$1" "$2" "$3"
+return "$?"
+;;
+depexts)
+_dune_ub "$1" "$2" "$3"
+return "$?"
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_wb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --all --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --all)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_xb() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_yb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_xb "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --wait | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
 _dune_zb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_Ab() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_o "$2" "status build ping"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--help -h"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+esac
+fi
+case "$w" in
+--help | -h)
+p=1
+;;
+status)
+_dune_wb "$1" "$2" "$3"
+return "$?"
+;;
+build)
+_dune_yb "$1" "$2" "$3"
+return "$?"
+;;
+ping)
+_dune_zb "$1" "$2" "$3"
+return "$?"
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_Bb() {
+case "$2" in
+0)
+_dune_n "$1"
+;;
+esac
+}
+_dune_Cb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_Bb "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_Db() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -4143,7 +4262,7 @@ esac
 fi
 done
 }
-_dune_Ab() {
+_dune_Eb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -4190,7 +4309,7 @@ esac
 fi
 done
 }
-_dune_Bb() {
+_dune_Fb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -4222,15 +4341,15 @@ case "$w" in
 p=1
 ;;
 dump)
-_dune_yb "$1" "$2" "$3"
+_dune_Cb "$1" "$2" "$3"
 return "$?"
 ;;
 latest-lang-version)
-_dune_zb "$1" "$2" "$3"
+_dune_Db "$1" "$2" "$3"
 return "$?"
 ;;
 print-completion-script-bash)
-_dune_Ab "$1" "$2" "$3"
+_dune_Eb "$1" "$2" "$3"
 return "$?"
 ;;
 -*)
@@ -4246,21 +4365,21 @@ esac
 fi
 done
 }
-_dune_Cb() {
+_dune_Gb() {
 case "$2" in
 0 | 1)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_Db() {
+_dune_Hb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Cb "$2" "$i"
+_dune_Gb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4301,21 +4420,21 @@ esac
 fi
 done
 }
-_dune_Eb() {
+_dune_Ib() {
 case "$2" in
 0 | 1)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_Fb() {
+_dune_Jb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Eb "$2" "$i"
+_dune_Ib "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --kind --libs --no-buffer --no-print-directory --only-packages --pkg --ppx --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4356,21 +4475,21 @@ esac
 fi
 done
 }
-_dune_Gb() {
+_dune_Kb() {
 case "$2" in
 0 | 1)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_Hb() {
+_dune_Lb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Gb "$2" "$i"
+_dune_Kb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4411,21 +4530,21 @@ esac
 fi
 done
 }
-_dune_Ib() {
+_dune_Mb() {
 case "$2" in
 0 | 1)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_Jb() {
+_dune_Nb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Ib "$2" "$i"
+_dune_Mb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4466,7 +4585,7 @@ esac
 fi
 done
 }
-_dune_Kb() {
+_dune_Ob() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -4498,130 +4617,20 @@ case "$w" in
 p=1
 ;;
 executable)
-_dune_Db "$1" "$2" "$3"
-return "$?"
-;;
-project)
-_dune_Fb "$1" "$2" "$3"
-return "$?"
-;;
-library)
 _dune_Hb "$1" "$2" "$3"
 return "$?"
 ;;
-test)
+project)
 _dune_Jb "$1" "$2" "$3"
 return "$?"
 ;;
--*)
-p=0
+library)
+_dune_Lb "$1" "$2" "$3"
+return "$?"
 ;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_Lb() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_Mb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_Lb "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_Nb() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_Ob() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_Nb "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
-p=1
+test)
+_dune_Nb "$1" "$2" "$3"
+return "$?"
 ;;
 -*)
 p=0
@@ -4692,131 +4701,20 @@ fi
 done
 }
 _dune_Rb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_o "$2" "list apply diff"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--help -h"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
-esac
-fi
-case "$w" in
---help | -h)
-p=1
-;;
-list)
-_dune_Mb "$1" "$2" "$3"
-return "$?"
-;;
-apply)
-_dune_Ob "$1" "$2" "$3"
-return "$?"
-;;
-diff)
-_dune_Qb "$1" "$2" "$3"
-return "$?"
-;;
--*)
-p=0
-;;
+case "$2" in
 *)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
+_dune_n "$1"
 ;;
 esac
-fi
-done
 }
 _dune_Sb() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_Tb() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_Sb "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---version-preference | --error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_Ub() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_Vb() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_Ub "$2" "$i"
+_dune_Rb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -4857,6 +4755,117 @@ esac
 fi
 done
 }
+_dune_Tb() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_Ub() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_Tb "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_Vb() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_o "$2" "list apply diff"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--help -h"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+esac
+fi
+case "$w" in
+--help | -h)
+p=1
+;;
+list)
+_dune_Qb "$1" "$2" "$3"
+return "$?"
+;;
+apply)
+_dune_Sb "$1" "$2" "$3"
+return "$?"
+;;
+diff)
+_dune_Ub "$1" "$2" "$3"
+return "$?"
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
 _dune_Wb() {
 case "$2" in
 *)
@@ -4873,7 +4882,7 @@ fi
 if _dune_l; then
 _dune_Wb "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
 return "$_dune_a"
 else
@@ -4889,14 +4898,14 @@ return "$_dune_c"
 fi
 if _dune_l; then
 case "$w" in
---error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+--version-preference | --error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
 _dune_n "$2"
 return "$_dune_a"
 ;;
 esac
 fi
 case "$w" in
---help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+--help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
 p=1
 ;;
 -*)
@@ -4968,82 +4977,22 @@ fi
 done
 }
 _dune__c() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_o "$2" "lock print-solver-env outdated validate-lockdir"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--help -h"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
-esac
-fi
-case "$w" in
---help | -h)
-p=1
-;;
-lock)
-_dune_Tb "$1" "$2" "$3"
-return "$?"
-;;
-print-solver-env)
-_dune_Vb "$1" "$2" "$3"
-return "$?"
-;;
-outdated)
-_dune_Xb "$1" "$2" "$3"
-return "$?"
-;;
-validate-lockdir)
-_dune_Zb "$1" "$2" "$3"
-return "$?"
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_ac() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_bc() {
+_dune_ac() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_ac "$2" "$i"
+_dune__c "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
 return "$_dune_a"
 else
@@ -5059,14 +5008,14 @@ return "$_dune_c"
 fi
 if _dune_l; then
 case "$w" in
---version-preference | --error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+--error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
 _dune_n "$2"
 return "$_dune_a"
 ;;
 esac
 fi
 case "$w" in
---help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+--help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
 p=1
 ;;
 -*)
@@ -5082,21 +5031,21 @@ esac
 fi
 done
 }
-_dune_cc() {
+_dune_bc() {
 case "$2" in
 *)
 _dune_n "$1"
 ;;
 esac
 }
-_dune_dc() {
+_dune_cc() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
 return "$_dune_c"
 fi
 if _dune_l; then
-_dune_cc "$2" "$i"
+_dune_bc "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
 _dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
@@ -5137,6 +5086,66 @@ esac
 fi
 done
 }
+_dune_dc() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_o "$2" "lock print-solver-env outdated validate-lockdir"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--help -h"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+esac
+fi
+case "$w" in
+--help | -h)
+p=1
+;;
+lock)
+_dune_Xb "$1" "$2" "$3"
+return "$?"
+;;
+print-solver-env)
+_dune_Zb "$1" "$2" "$3"
+return "$?"
+;;
+outdated)
+_dune_ac "$1" "$2" "$3"
+return "$?"
+;;
+validate-lockdir)
+_dune_cc "$1" "$2" "$3"
+return "$?"
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
 _dune_ec() {
 case "$2" in
 *)
@@ -5153,7 +5162,7 @@ fi
 if _dune_l; then
 _dune_ec "$2" "$i"
 if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
 fi
 return "$_dune_a"
 else
@@ -5169,14 +5178,14 @@ return "$_dune_c"
 fi
 if _dune_l; then
 case "$w" in
---error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+--version-preference | --error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
 _dune_n "$2"
 return "$_dune_a"
 ;;
 esac
 fi
 case "$w" in
---help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+--help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
 p=1
 ;;
 -*)
@@ -5248,6 +5257,116 @@ fi
 done
 }
 _dune_ic() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_jc() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_ic "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--error-reporting | --file-watcher | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --config-file | --root | --default-target | --promote-install-files | --dump-memo-graph | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --cache-storage-mode | --action-stdout-on-success | --workspace | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --instrument-with | --watch-exclusions | --debug-cache)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_kc() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_lc() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_kc "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_mc() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -5279,130 +5398,20 @@ case "$w" in
 p=1
 ;;
 lock)
-_dune_bc "$1" "$2" "$3"
-return "$?"
-;;
-print-solver-env)
-_dune_dc "$1" "$2" "$3"
-return "$?"
-;;
-outdated)
 _dune_fc "$1" "$2" "$3"
 return "$?"
 ;;
-validate-lockdir)
+print-solver-env)
 _dune_hc "$1" "$2" "$3"
 return "$?"
 ;;
--*)
-p=0
+outdated)
+_dune_jc "$1" "$2" "$3"
+return "$?"
 ;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_jc() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_kc() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_jc "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
-p=1
-;;
--*)
-p=0
-;;
-*)
-if [ "$p" -eq 0 ]; then
-i=$((i+1))
-fi
-p=0
-;;
-esac
-fi
-done
-}
-_dune_lc() {
-case "$2" in
-*)
-_dune_n "$1"
-;;
-esac
-}
-_dune_mc() {
-local p="0" i="0"
-while true; do
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-_dune_lc "$2" "$i"
-if [ "${#COMPREPLY[@]}" == "0" ]; then
-_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
-fi
-return "$_dune_a"
-else
-local w s
-w=$(_dune_j)
-s=$?
-if [ "$s" -ne 0 ]; then
-return "$s"
-fi
-_dune_k
-if _dune_m; then
-return "$_dune_c"
-fi
-if _dune_l; then
-case "$w" in
---debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
-_dune_n "$2"
-return "$_dune_a"
-;;
-esac
-fi
-case "$w" in
---help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
-p=1
+validate-lockdir)
+_dune_lc "$1" "$2" "$3"
+return "$?"
 ;;
 -*)
 p=0
@@ -5418,6 +5427,116 @@ fi
 done
 }
 _dune_nc() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_oc() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_nc "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_pc() {
+case "$2" in
+*)
+_dune_n "$1"
+;;
+esac
+}
+_dune_qc() {
+local p="0" i="0"
+while true; do
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+_dune_pc "$2" "$i"
+if [ "${#COMPREPLY[@]}" == "0" ]; then
+_dune_o "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+fi
+return "$_dune_a"
+else
+local w s
+w=$(_dune_j)
+s=$?
+if [ "$s" -ne 0 ]; then
+return "$s"
+fi
+_dune_k
+if _dune_m; then
+return "$_dune_c"
+fi
+if _dune_l; then
+case "$w" in
+--debug-cache | --watch-exclusions | --instrument-with | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --workspace | --action-stdout-on-success | --cache-storage-mode | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --dump-memo-graph | --promote-install-files | --default-target | --root | --config-file | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --file-watcher | --error-reporting)
+_dune_n "$2"
+return "$_dune_a"
+;;
+esac
+fi
+case "$w" in
+--help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+p=1
+;;
+-*)
+p=0
+;;
+*)
+if [ "$p" -eq 0 ]; then
+i=$((i+1))
+fi
+p=0
+;;
+esac
+fi
+done
+}
+_dune_rc() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -5449,11 +5568,11 @@ case "$w" in
 p=1
 ;;
 ocamlformat)
-_dune_kc "$1" "$2" "$3"
+_dune_oc "$1" "$2" "$3"
 return "$?"
 ;;
 ocamllsp)
-_dune_mc "$1" "$2" "$3"
+_dune_qc "$1" "$2" "$3"
 return "$?"
 ;;
 -*)
@@ -5469,7 +5588,7 @@ esac
 fi
 done
 }
-_dune_oc() {
+_dune_sc() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -5501,7 +5620,7 @@ case "$w" in
 p=1
 ;;
 exec)
-_dune_nc "$1" "$2" "$3"
+_dune_rc "$1" "$2" "$3"
 return "$?"
 ;;
 -*)
@@ -5517,7 +5636,7 @@ esac
 fi
 done
 }
-_dune_pc() {
+_dune_tc() {
 local p="0" i="0"
 while true; do
 if _dune_m; then
@@ -5653,39 +5772,39 @@ _dune_va "$1" "$2" "$3"
 return "$?"
 ;;
 describe)
-_dune_Ua "$1" "$2" "$3"
+_dune_Wa "$1" "$2" "$3"
 return "$?"
 ;;
 show)
-_dune_rb "$1" "$2" "$3"
+_dune_vb "$1" "$2" "$3"
 return "$?"
 ;;
 rpc)
-_dune_wb "$1" "$2" "$3"
+_dune_Ab "$1" "$2" "$3"
 return "$?"
 ;;
 internal)
-_dune_Bb "$1" "$2" "$3"
+_dune_Fb "$1" "$2" "$3"
 return "$?"
 ;;
 init)
-_dune_Kb "$1" "$2" "$3"
+_dune_Ob "$1" "$2" "$3"
 return "$?"
 ;;
 promotion)
-_dune_Rb "$1" "$2" "$3"
+_dune_Vb "$1" "$2" "$3"
 return "$?"
 ;;
 pkg)
-_dune__c "$1" "$2" "$3"
+_dune_dc "$1" "$2" "$3"
 return "$?"
 ;;
 package)
-_dune_ic "$1" "$2" "$3"
+_dune_mc "$1" "$2" "$3"
 return "$?"
 ;;
 tools)
-_dune_oc "$1" "$2" "$3"
+_dune_sc "$1" "$2" "$3"
 return "$?"
 ;;
 -*)
