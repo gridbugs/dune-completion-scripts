@@ -78,12 +78,14 @@ _dune_comp_words_traverse_is_past_cursor() {
 _dune_add_reply_files() {
   # Takes the word under the cursor (just the portion up to the cursor) and
   # completes with files in the current directory.
-  COMPREPLY+=($(compgen -A file -- "$1"))
+  while IFS= read -r line; do
+    COMPREPLY+=( "$line" )
+  done < <(compgen -A file -- "$1")
   # Tell the shell that completions will be filenames. This allows for
   # ergonomic improvements such as appending a slash to directories and
   # omitting the space after completions so completion of paths can continue
   # if the user presses tab again.
-  compopt -o filenames
+  type compot &> /dev/null && complopt -o filenames
 }
 
 _dune_add_reply_fixed() {
@@ -127,7 +129,7 @@ _dune_runtest() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -290,7 +292,7 @@ _dune_runtest() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -333,7 +335,7 @@ _dune_test() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -496,7 +498,7 @@ _dune_test() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -529,7 +531,7 @@ _dune_installed-libraries() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -701,7 +703,7 @@ _dune_installed-libraries() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -744,7 +746,7 @@ _dune_external-lib-deps() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --missing --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sexp --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --unstable-by-dir --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --missing --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sexp --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --unstable-by-dir --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -915,7 +917,7 @@ _dune_external-lib-deps() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --unstable-by-dir | --missing | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --sexp)
+        --help | -h | --unstable-by-dir | --missing | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --sexp | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -958,7 +960,7 @@ _dune_build() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -1121,7 +1123,7 @@ _dune_build() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -1154,7 +1156,7 @@ _dune_fmt() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --preview --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --preview --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -1317,7 +1319,7 @@ _dune_fmt() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --preview)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --preview | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -1350,7 +1352,7 @@ _dune_clean() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -1513,7 +1515,7 @@ _dune_clean() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -1556,7 +1558,7 @@ _dune_install() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --bindir --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --create-install-files --datadir --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --destdir --diff-command --display-separate-messages --docdir --dry-run --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --etcdir --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libdir --libexecdir --mandir --no-buffer --no-print-directory --only-packages --prefix --print-metrics --profile --promote-install-files --release --relocatable --require-dune-project-file --root --sandbox --sbindir --sections --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --bindir --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --create-install-files --datadir --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --destdir --diff-command --display-separate-messages --docdir --dry-run --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --etcdir --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libdir --libexecdir --mandir --manpage --no-buffer --no-print-directory --only-packages --prefix --print-metrics --profile --promote-install-files --release --relocatable --require-dune-project-file --root --sandbox --sbindir --sections --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -1779,7 +1781,7 @@ _dune_install() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --create-install-files | --dry-run | --datadir | --bindir | --docdir | --libdir | --prefix | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --destdir | --mandir | --etcdir | --sbindir | --libexecdir | --relocatable | --sections)
+        --help | -h | --context | --create-install-files | --dry-run | --datadir | --bindir | --docdir | --libdir | --prefix | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --destdir | --mandir | --etcdir | --sbindir | --libexecdir | --relocatable | --sections | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -1822,7 +1824,7 @@ _dune_uninstall() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --bindir --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --create-install-files --datadir --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --destdir --diff-command --display-separate-messages --docdir --dry-run --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --etcdir --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libdir --libexecdir --mandir --no-buffer --no-print-directory --only-packages --prefix --print-metrics --profile --promote-install-files --release --relocatable --require-dune-project-file --root --sandbox --sbindir --sections --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --bindir --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --create-install-files --datadir --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --destdir --diff-command --display-separate-messages --docdir --dry-run --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --etcdir --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libdir --libexecdir --mandir --manpage --no-buffer --no-print-directory --only-packages --prefix --print-metrics --profile --promote-install-files --release --relocatable --require-dune-project-file --root --sandbox --sbindir --sections --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2045,7 +2047,7 @@ _dune_uninstall() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --create-install-files | --dry-run | --datadir | --bindir | --docdir | --libdir | --prefix | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --destdir | --mandir | --etcdir | --sbindir | --libexecdir | --relocatable | --sections)
+        --help | -h | --context | --create-install-files | --dry-run | --datadir | --bindir | --docdir | --libdir | --prefix | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --destdir | --mandir | --etcdir | --sbindir | --libexecdir | --relocatable | --sections | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2091,7 +2093,7 @@ _dune_exec() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-build --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-build --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2259,7 +2261,7 @@ _dune_exec() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --no-build | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --no-build | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2292,7 +2294,7 @@ _dune_subst() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--build-info --debug-backtraces --help -h"
+        _dune_add_reply_fixed "$2" "--build-info --debug-backtraces --help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2315,7 +2317,7 @@ _dune_subst() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --build-info | --debug-backtraces)
+        --help | -h | --build-info | --debug-backtraces | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2358,7 +2360,7 @@ _dune_rules() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2526,7 +2528,7 @@ _dune_rules() {
         esac
       fi
       case "$current_word" in
-        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive)
+        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2572,7 +2574,7 @@ _dune_utop() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2740,7 +2742,7 @@ _dune_utop() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2783,7 +2785,7 @@ _dune_promote() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -2946,7 +2948,7 @@ _dune_promote() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -2989,7 +2991,7 @@ _dune_printenv() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3157,7 +3159,7 @@ _dune_printenv() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3200,7 +3202,7 @@ _dune_help() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--build-info --help -h"
+        _dune_add_reply_fixed "$2" "--build-info --help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3223,7 +3225,7 @@ _dune_help() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --build-info)
+        --help | -h | --build-info | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3266,7 +3268,7 @@ _dune_format-dune-file() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--dune-version --help -h"
+        _dune_add_reply_fixed "$2" "--dune-version --help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3294,7 +3296,7 @@ _dune_format-dune-file() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --dune-version)
+        --help | -h | --dune-version | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3327,7 +3329,7 @@ _dune_upgrade() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3490,7 +3492,7 @@ _dune_upgrade() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3523,7 +3525,7 @@ _dune_cache__trim() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help --size --trimmed-size -h"
+        _dune_add_reply_fixed "$2" "--help --manpage --size --trimmed-size -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3556,7 +3558,7 @@ _dune_cache__trim() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --trimmed-size | --size)
+        --help | -h | --trimmed-size | --size | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3589,7 +3591,7 @@ _dune_cache__size() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help --machine-readable -h"
+        _dune_add_reply_fixed "$2" "--help --machine-readable --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3612,7 +3614,7 @@ _dune_cache__size() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --machine-readable)
+        --help | -h | --machine-readable | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3645,7 +3647,7 @@ _dune_cache__clear() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3668,7 +3670,7 @@ _dune_cache__clear() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3700,7 +3702,7 @@ _dune_cache() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3723,7 +3725,7 @@ _dune_cache() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         trim)
@@ -3778,7 +3780,7 @@ _dune_top() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -3946,7 +3948,7 @@ _dune_top() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -3979,7 +3981,7 @@ _dune_ocaml-merlin() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -4151,7 +4153,7 @@ _dune_ocaml-merlin() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -4184,7 +4186,7 @@ _dune_shutdown() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -4347,7 +4349,7 @@ _dune_shutdown() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -4380,7 +4382,7 @@ _dune_diagnostics() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -4546,7 +4548,7 @@ _dune_diagnostics() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -4579,7 +4581,7 @@ _dune_monitor() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --quit-on-disconnect --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --quit-on-disconnect --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -4742,7 +4744,7 @@ _dune_monitor() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --quit-on-disconnect)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --quit-on-disconnect | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -4788,7 +4790,7 @@ _dune_ocaml__utop() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -4957,7 +4959,7 @@ _dune_ocaml__utop() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -4990,7 +4992,7 @@ _dune_ocaml__ocaml-merlin() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -5166,7 +5168,7 @@ _dune_ocaml__ocaml-merlin() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -5209,7 +5211,7 @@ _dune_ocaml__dump-dot-merlin() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -5390,7 +5392,7 @@ _dune_ocaml__dump-dot-merlin() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -5433,7 +5435,7 @@ _dune_ocaml__top() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -5601,7 +5603,7 @@ _dune_ocaml__top() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -5644,7 +5646,7 @@ _dune_ocaml__top-module() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -5819,7 +5821,7 @@ _dune_ocaml__top-module() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -5862,7 +5864,7 @@ _dune_ocaml__merlin__dump-config() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6049,7 +6051,7 @@ _dune_ocaml__merlin__dump-config() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -6082,7 +6084,7 @@ _dune_ocaml__merlin__start-session() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6272,7 +6274,7 @@ _dune_ocaml__merlin__start-session() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -6304,7 +6306,7 @@ _dune_ocaml__merlin() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6327,7 +6329,7 @@ _dune_ocaml__merlin() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         dump-config)
@@ -6368,7 +6370,7 @@ _dune_ocaml__doc() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6531,7 +6533,7 @@ _dune_ocaml__doc() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -6563,7 +6565,7 @@ _dune_ocaml() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6586,7 +6588,7 @@ _dune_ocaml() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         utop)
@@ -6660,7 +6662,7 @@ _dune_coq__top() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-build --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --toplevel --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-build --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --toplevel --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6833,7 +6835,7 @@ _dune_coq__top() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --toplevel | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --no-build)
+        --help | -h | --toplevel | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --no-build | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -6865,7 +6867,7 @@ _dune_coq() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -6888,7 +6890,7 @@ _dune_coq() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         top)
@@ -6935,7 +6937,7 @@ _dune_describe__workspace() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -7121,7 +7123,7 @@ _dune_describe__workspace() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests)
+        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -7154,7 +7156,7 @@ _dune_describe__external-lib-deps() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -7354,7 +7356,7 @@ _dune_describe__external-lib-deps() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --format)
+        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --format | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -7387,7 +7389,7 @@ _dune_describe__opam-files() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -7569,7 +7571,7 @@ _dune_describe__opam-files() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --format | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --lang)
+        --help | -h | --format | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --lang | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -7612,7 +7614,7 @@ _dune_describe__pp() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -7788,7 +7790,7 @@ _dune_describe__pp() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context)
+        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -7831,7 +7833,7 @@ _dune_describe__env() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -8003,7 +8005,7 @@ _dune_describe__env() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -8046,7 +8048,7 @@ _dune_describe__rules() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -8220,7 +8222,7 @@ _dune_describe__rules() {
         esac
       fi
       case "$current_word" in
-        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive)
+        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -8253,7 +8255,7 @@ _dune_describe__installed-libraries() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -8440,7 +8442,7 @@ _dune_describe__installed-libraries() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -8483,7 +8485,7 @@ _dune_describe__targets() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -8658,7 +8660,7 @@ _dune_describe__targets() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -8701,7 +8703,7 @@ _dune_describe__aliases() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -8876,7 +8878,7 @@ _dune_describe__aliases() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -8909,7 +8911,7 @@ _dune_describe__package-entries() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -9101,7 +9103,7 @@ _dune_describe__package-entries() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --format)
+        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --format | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -9144,7 +9146,7 @@ _dune_describe__pkg__lock() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -9315,7 +9317,7 @@ _dune_describe__pkg__lock() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -9358,7 +9360,7 @@ _dune_describe__pkg__list-locked-dependencies() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -9549,7 +9551,7 @@ _dune_describe__pkg__list-locked-dependencies() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -9582,7 +9584,7 @@ _dune_describe__pkg__dependency-hash() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -9769,7 +9771,7 @@ _dune_describe__pkg__dependency-hash() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -9801,7 +9803,7 @@ _dune_describe__pkg() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -9824,7 +9826,7 @@ _dune_describe__pkg() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         lock)
@@ -9869,7 +9871,7 @@ _dune_describe__contexts() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10040,7 +10042,7 @@ _dune_describe__contexts() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -10058,17 +10060,6 @@ _dune_describe__contexts() {
   done
 }
 
-_dune_describe__depexts__complete_positional_args() {
-  # Takes the portion of the word under the cursor before the cursor and the
-  # index of the current positional argument on the command line and adds comp
-  # replies for that positional argument begining with that prefix.
-  case "$2" in
-    *)
-      _dune_add_reply_files "$1"
-      ;;
-  esac
-}
-
 _dune_describe__depexts() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -10079,11 +10070,12 @@ _dune_describe__depexts() {
       # Try to complete subcommands and positional arguments first.
       # This is where we would add completions for subcommands however
       # this command has no subcommands.
-      _dune_describe__depexts__complete_positional_args "$2" "$positional_argument_index"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10250,10 +10242,15 @@ _dune_describe__depexts() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --context)
+            # completions for: depexts describe --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -10295,7 +10292,7 @@ _dune_describe() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10473,7 +10470,7 @@ _dune_describe() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests)
+        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         workspace)
@@ -10568,7 +10565,7 @@ _dune_show__workspace() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --sanitize-for-tests --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --with-deps --with-pps --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10752,7 +10749,7 @@ _dune_show__workspace() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests)
+        --help | -h | --lang | --context | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --format | --with-pps | --with-deps | --sanitize-for-tests | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -10785,7 +10782,7 @@ _dune_show__external-lib-deps() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10978,7 +10975,7 @@ _dune_show__external-lib-deps() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --format)
+        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --format | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -11011,7 +11008,7 @@ _dune_show__opam-files() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -11191,7 +11188,7 @@ _dune_show__opam-files() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --format | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --lang)
+        --help | -h | --format | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --lang | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -11234,7 +11231,7 @@ _dune_show__pp() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --lang --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -11407,7 +11404,7 @@ _dune_show__pp() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context)
+        --help | -h | --lang | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -11450,7 +11447,7 @@ _dune_show__env() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --field --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -11618,7 +11615,7 @@ _dune_show__env() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --field | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -11661,7 +11658,7 @@ _dune_show__rules() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --makefile --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --recursive --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -m -o -r -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -11830,7 +11827,7 @@ _dune_show__rules() {
         esac
       fi
       case "$current_word" in
-        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive)
+        --help | -h | -m | --makefile | -o | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | -r | --recursive | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -11863,7 +11860,7 @@ _dune_show__installed-libraries() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --na --no-buffer --no-print-directory --not-available --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -12045,7 +12042,7 @@ _dune_show__installed-libraries() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --na | --not-available | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -12088,7 +12085,7 @@ _dune_show__targets() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -12260,7 +12257,7 @@ _dune_show__targets() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -12303,7 +12300,7 @@ _dune_show__aliases() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -12475,7 +12472,7 @@ _dune_show__aliases() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -12508,7 +12505,7 @@ _dune_show__package-entries() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --format --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -12693,7 +12690,7 @@ _dune_show__package-entries() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --format)
+        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --format | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -12736,7 +12733,7 @@ _dune_show__pkg__lock() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -12904,7 +12901,7 @@ _dune_show__pkg__lock() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -12947,7 +12944,7 @@ _dune_show__pkg__list-locked-dependencies() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13136,7 +13133,7 @@ _dune_show__pkg__list-locked-dependencies() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -13169,7 +13166,7 @@ _dune_show__pkg__dependency-hash() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13351,7 +13348,7 @@ _dune_show__pkg__dependency-hash() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -13383,7 +13380,7 @@ _dune_show__pkg() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13406,7 +13403,7 @@ _dune_show__pkg() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         lock)
@@ -13451,7 +13448,7 @@ _dune_show__contexts() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13619,7 +13616,7 @@ _dune_show__contexts() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -13637,17 +13634,6 @@ _dune_show__contexts() {
   done
 }
 
-_dune_show__depexts__complete_positional_args() {
-  # Takes the portion of the word under the cursor before the cursor and the
-  # index of the current positional argument on the command line and adds comp
-  # replies for that positional argument begining with that prefix.
-  case "$2" in
-    *)
-      _dune_add_reply_files "$1"
-      ;;
-  esac
-}
-
 _dune_show__depexts() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -13658,11 +13644,12 @@ _dune_show__depexts() {
       # Try to complete subcommands and positional arguments first.
       # This is where we would add completions for subcommands however
       # this command has no subcommands.
-      _dune_show__depexts__complete_positional_args "$2" "$positional_argument_index"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13826,10 +13813,15 @@ _dune_show__depexts() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --context)
+            # completions for: depexts show --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -13861,7 +13853,7 @@ _dune_show() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13884,7 +13876,7 @@ _dune_show() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         workspace)
@@ -13969,7 +13961,7 @@ _dune_rpc__status() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --all --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --all --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14133,7 +14125,7 @@ _dune_rpc__status() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --all)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --all | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -14176,7 +14168,7 @@ _dune_rpc__build() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14339,7 +14331,7 @@ _dune_rpc__build() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --wait | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --wait | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -14372,7 +14364,7 @@ _dune_rpc__ping() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14535,7 +14527,7 @@ _dune_rpc__ping() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -14567,7 +14559,7 @@ _dune_rpc() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14590,7 +14582,7 @@ _dune_rpc() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         status)
@@ -14645,7 +14637,7 @@ _dune_internal__dump() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14813,7 +14805,7 @@ _dune_internal__dump() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -14846,7 +14838,7 @@ _dune_internal__latest-lang-version() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14869,7 +14861,7 @@ _dune_internal__latest-lang-version() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -14962,7 +14954,7 @@ _dune_internal() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -14985,7 +14977,7 @@ _dune_internal() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         dump)
@@ -15043,7 +15035,7 @@ _dune_init__executable() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --manpage --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -15063,124 +15055,33 @@ _dune_init__executable() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
-          --ppx)
-            # completions for: executable init --ppx
+          --debug-cache)
+            # completions for: executable init --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --libs)
-            # completions for: executable init --libs
+          --watch-exclusions)
+            # completions for: executable init --watch-exclusions
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --error-reporting)
-            # completions for: executable init --error-reporting
+          --instrument-with)
+            # completions for: executable init --instrument-with
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --file-watcher)
-            # completions for: executable init --file-watcher
+          --diff-command)
+            # completions for: executable init --diff-command
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --trace-file)
-            # completions for: executable init --trace-file
+          -x)
+            # completions for: executable init -x
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --build-dir)
-            # completions for: executable init --build-dir
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --profile)
-            # completions for: executable init --profile
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --only-packages)
-            # completions for: executable init --only-packages
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --require-dune-project-file)
-            # completions for: executable init
-            # --require-dune-project-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --config-file)
-            # completions for: executable init --config-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --root)
-            # completions for: executable init --root
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --default-target)
-            # completions for: executable init --default-target
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --promote-install-files)
-            # completions for: executable init
-            # --promote-install-files
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph)
-            # completions for: executable init --dump-memo-graph
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stderr-on-success)
-            # completions for: executable init
-            # --action-stderr-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-check-probability)
-            # completions for: executable init
-            # --cache-check-probability
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache)
-            # completions for: executable init --cache
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --terminal-persistence)
-            # completions for: executable init
-            # --terminal-persistence
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -j)
-            # completions for: executable init -j
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --sandbox)
-            # completions for: executable init --sandbox
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-storage-mode)
-            # completions for: executable init --cache-storage-mode
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stdout-on-success)
-            # completions for: executable init
-            # --action-stdout-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --workspace)
-            # completions for: executable init --workspace
+          --dump-gc-stats)
+            # completions for: executable init --dump-gc-stats
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -15190,33 +15091,119 @@ _dune_init__executable() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --dump-gc-stats)
-            # completions for: executable init --dump-gc-stats
+          --workspace)
+            # completions for: executable init --workspace
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          -x)
-            # completions for: executable init -x
+          --action-stdout-on-success)
+            # completions for: executable init
+            # --action-stdout-on-success
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --diff-command)
-            # completions for: executable init --diff-command
+          --cache-storage-mode)
+            # completions for: executable init --cache-storage-mode
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --instrument-with)
-            # completions for: executable init --instrument-with
+          --sandbox)
+            # completions for: executable init --sandbox
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --watch-exclusions)
-            # completions for: executable init --watch-exclusions
+          -j)
+            # completions for: executable init -j
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: executable init --debug-cache
+          --terminal-persistence)
+            # completions for: executable init
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: executable init --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: executable init
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: executable init
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: executable init --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: executable init
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: executable init --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: executable init --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: executable init --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: executable init
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: executable init --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: executable init --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: executable init --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: executable init --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: executable init --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: executable init --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --libs)
+            # completions for: executable init --libs
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -15225,10 +15212,15 @@ _dune_init__executable() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --ppx)
+            # completions for: executable init --ppx
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --ppx | --libs | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --public)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --libs | --public | --ppx | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -15274,7 +15266,7 @@ _dune_init__project() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --kind --libs --no-buffer --no-print-directory --only-packages --pkg --ppx --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --kind --libs --manpage --no-buffer --no-print-directory --only-packages --pkg --ppx --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -15461,7 +15453,7 @@ _dune_init__project() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --kind | --ppx | --libs | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --inline-tests | --pkg)
+        --help | -h | --kind | --ppx | --libs | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --inline-tests | --pkg | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -15507,7 +15499,7 @@ _dune_init__library() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --inline-tests --instrument-with --libs --manpage --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -15527,116 +15519,48 @@ _dune_init__library() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
+          --ppx)
+            # completions for: library init --ppx
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
           --public)
             # completions for: library init --public
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: library init --debug-cache
+          --libs)
+            # completions for: library init --libs
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --watch-exclusions)
-            # completions for: library init --watch-exclusions
+          --error-reporting)
+            # completions for: library init --error-reporting
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --instrument-with)
-            # completions for: library init --instrument-with
+          --file-watcher)
+            # completions for: library init --file-watcher
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --diff-command)
-            # completions for: library init --diff-command
+          --trace-file)
+            # completions for: library init --trace-file
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          -x)
-            # completions for: library init -x
+          --build-dir)
+            # completions for: library init --build-dir
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --dump-gc-stats)
-            # completions for: library init --dump-gc-stats
+          --profile)
+            # completions for: library init --profile
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --dump-memo-graph-format)
-            # completions for: library init --dump-memo-graph-format
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --workspace)
-            # completions for: library init --workspace
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stdout-on-success)
-            # completions for: library init
-            # --action-stdout-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-storage-mode)
-            # completions for: library init --cache-storage-mode
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --sandbox)
-            # completions for: library init --sandbox
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -j)
-            # completions for: library init -j
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --terminal-persistence)
-            # completions for: library init --terminal-persistence
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache)
-            # completions for: library init --cache
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-check-probability)
-            # completions for: library init
-            # --cache-check-probability
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stderr-on-success)
-            # completions for: library init
-            # --action-stderr-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph)
-            # completions for: library init --dump-memo-graph
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --promote-install-files)
-            # completions for: library init --promote-install-files
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --default-target)
-            # completions for: library init --default-target
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --root)
-            # completions for: library init --root
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --config-file)
-            # completions for: library init --config-file
+          --only-packages)
+            # completions for: library init --only-packages
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -15646,50 +15570,118 @@ _dune_init__library() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --only-packages)
-            # completions for: library init --only-packages
+          --config-file)
+            # completions for: library init --config-file
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --profile)
-            # completions for: library init --profile
+          --root)
+            # completions for: library init --root
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --build-dir)
-            # completions for: library init --build-dir
+          --default-target)
+            # completions for: library init --default-target
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --trace-file)
-            # completions for: library init --trace-file
+          --promote-install-files)
+            # completions for: library init --promote-install-files
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --file-watcher)
-            # completions for: library init --file-watcher
+          --dump-memo-graph)
+            # completions for: library init --dump-memo-graph
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --error-reporting)
-            # completions for: library init --error-reporting
+          --action-stderr-on-success)
+            # completions for: library init
+            # --action-stderr-on-success
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --libs)
-            # completions for: library init --libs
+          --cache-check-probability)
+            # completions for: library init
+            # --cache-check-probability
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --ppx)
-            # completions for: library init --ppx
+          --cache)
+            # completions for: library init --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: library init --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: library init -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: library init --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: library init --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: library init
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: library init --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: library init --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: library init --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: library init -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: library init --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: library init --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: library init --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: library init --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --public | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --libs | --ppx | --inline-tests)
+        --help | -h | --ppx | --public | --libs | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --inline-tests | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -15735,7 +15727,7 @@ _dune_init__test() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --libs --manpage --no-buffer --no-print-directory --only-packages --ppx --print-metrics --profile --promote-install-files --public --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -15900,6 +15892,11 @@ _dune_init__test() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --public)
+            # completions for: test init --public
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
           --ppx)
             # completions for: test init --ppx
             _dune_add_reply_files "$2"
@@ -15908,7 +15905,7 @@ _dune_init__test() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --libs | --ppx)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --libs | --public | --ppx | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -15940,7 +15937,7 @@ _dune_init() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -15963,7 +15960,7 @@ _dune_init() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         executable)
@@ -16022,7 +16019,7 @@ _dune_promotion__list() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -16191,7 +16188,7 @@ _dune_promotion__list() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -16234,7 +16231,7 @@ _dune_promotion__apply() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -16404,7 +16401,7 @@ _dune_promotion__apply() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -16447,7 +16444,7 @@ _dune_promotion__diff() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -16616,7 +16613,7 @@ _dune_promotion__diff() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -16648,7 +16645,7 @@ _dune_promotion() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -16671,7 +16668,7 @@ _dune_promotion() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         list)
@@ -16726,7 +16723,7 @@ _dune_pkg__lock() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --print-perf-stats --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -16746,138 +16743,8 @@ _dune_pkg__lock() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
-          --version-preference)
-            # completions for: lock pkg --version-preference
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --error-reporting)
-            # completions for: lock pkg --error-reporting
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --file-watcher)
-            # completions for: lock pkg --file-watcher
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --trace-file)
-            # completions for: lock pkg --trace-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --build-dir)
-            # completions for: lock pkg --build-dir
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --profile)
-            # completions for: lock pkg --profile
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --only-packages)
-            # completions for: lock pkg --only-packages
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --require-dune-project-file)
-            # completions for: lock pkg --require-dune-project-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --config-file)
-            # completions for: lock pkg --config-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --root)
-            # completions for: lock pkg --root
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --default-target)
-            # completions for: lock pkg --default-target
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --promote-install-files)
-            # completions for: lock pkg --promote-install-files
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph)
-            # completions for: lock pkg --dump-memo-graph
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stderr-on-success)
-            # completions for: lock pkg --action-stderr-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-check-probability)
-            # completions for: lock pkg --cache-check-probability
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache)
-            # completions for: lock pkg --cache
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --terminal-persistence)
-            # completions for: lock pkg --terminal-persistence
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -j)
-            # completions for: lock pkg -j
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --sandbox)
-            # completions for: lock pkg --sandbox
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-storage-mode)
-            # completions for: lock pkg --cache-storage-mode
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stdout-on-success)
-            # completions for: lock pkg --action-stdout-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --workspace)
-            # completions for: lock pkg --workspace
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph-format)
-            # completions for: lock pkg --dump-memo-graph-format
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-gc-stats)
-            # completions for: lock pkg --dump-gc-stats
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -x)
-            # completions for: lock pkg -x
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --diff-command)
-            # completions for: lock pkg --diff-command
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --instrument-with)
-            # completions for: lock pkg --instrument-with
+          --debug-cache)
+            # completions for: lock pkg --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -16886,15 +16753,145 @@ _dune_pkg__lock() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: lock pkg --debug-cache
+          --instrument-with)
+            # completions for: lock pkg --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: lock pkg --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: lock pkg -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: lock pkg --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: lock pkg --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: lock pkg --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: lock pkg --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: lock pkg --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: lock pkg --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: lock pkg -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: lock pkg --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: lock pkg --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: lock pkg --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: lock pkg --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: lock pkg --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: lock pkg --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: lock pkg --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: lock pkg --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: lock pkg --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: lock pkg --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: lock pkg --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: lock pkg --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: lock pkg --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: lock pkg --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: lock pkg --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: lock pkg --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --version-preference)
+            # completions for: lock pkg --version-preference
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --version-preference | --print-perf-stats | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -16937,7 +16934,7 @@ _dune_pkg__print-solver-env() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -17112,7 +17109,7 @@ _dune_pkg__print-solver-env() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -17155,7 +17152,7 @@ _dune_pkg__outdated() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -17322,7 +17319,7 @@ _dune_pkg__outdated() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -17365,7 +17362,7 @@ _dune_pkg__validate-lockdir() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -17540,7 +17537,7 @@ _dune_pkg__validate-lockdir() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -17572,7 +17569,7 @@ _dune_pkg() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -17595,7 +17592,7 @@ _dune_pkg() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         lock)
@@ -17654,7 +17651,7 @@ _dune_package__lock() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --print-perf-stats --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --version-preference --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -17674,106 +17671,43 @@ _dune_package__lock() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
-          --version-preference)
-            # completions for: lock package --version-preference
+          --debug-cache)
+            # completions for: lock package --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --error-reporting)
-            # completions for: lock package --error-reporting
+          --watch-exclusions)
+            # completions for: lock package --watch-exclusions
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --file-watcher)
-            # completions for: lock package --file-watcher
+          --instrument-with)
+            # completions for: lock package --instrument-with
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --trace-file)
-            # completions for: lock package --trace-file
+          --diff-command)
+            # completions for: lock package --diff-command
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --build-dir)
-            # completions for: lock package --build-dir
+          -x)
+            # completions for: lock package -x
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --profile)
-            # completions for: lock package --profile
+          --dump-gc-stats)
+            # completions for: lock package --dump-gc-stats
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --only-packages)
-            # completions for: lock package --only-packages
+          --dump-memo-graph-format)
+            # completions for: lock package --dump-memo-graph-format
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --require-dune-project-file)
-            # completions for: lock package
-            # --require-dune-project-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --config-file)
-            # completions for: lock package --config-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --root)
-            # completions for: lock package --root
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --default-target)
-            # completions for: lock package --default-target
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --promote-install-files)
-            # completions for: lock package --promote-install-files
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph)
-            # completions for: lock package --dump-memo-graph
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stderr-on-success)
-            # completions for: lock package
-            # --action-stderr-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-check-probability)
-            # completions for: lock package
-            # --cache-check-probability
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache)
-            # completions for: lock package --cache
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --terminal-persistence)
-            # completions for: lock package --terminal-persistence
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -j)
-            # completions for: lock package -j
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --sandbox)
-            # completions for: lock package --sandbox
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-storage-mode)
-            # completions for: lock package --cache-storage-mode
+          --workspace)
+            # completions for: lock package --workspace
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -17783,50 +17717,113 @@ _dune_package__lock() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --workspace)
-            # completions for: lock package --workspace
+          --cache-storage-mode)
+            # completions for: lock package --cache-storage-mode
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --dump-memo-graph-format)
-            # completions for: lock package --dump-memo-graph-format
+          --sandbox)
+            # completions for: lock package --sandbox
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --dump-gc-stats)
-            # completions for: lock package --dump-gc-stats
+          -j)
+            # completions for: lock package -j
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          -x)
-            # completions for: lock package -x
+          --terminal-persistence)
+            # completions for: lock package --terminal-persistence
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --diff-command)
-            # completions for: lock package --diff-command
+          --cache)
+            # completions for: lock package --cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --instrument-with)
-            # completions for: lock package --instrument-with
+          --cache-check-probability)
+            # completions for: lock package
+            # --cache-check-probability
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --watch-exclusions)
-            # completions for: lock package --watch-exclusions
+          --action-stderr-on-success)
+            # completions for: lock package
+            # --action-stderr-on-success
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: lock package --debug-cache
+          --dump-memo-graph)
+            # completions for: lock package --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: lock package --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: lock package --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: lock package --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: lock package --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: lock package
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: lock package --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: lock package --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: lock package --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: lock package --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: lock package --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: lock package --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --version-preference)
+            # completions for: lock package --version-preference
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --version-preference | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --version-preference | --print-perf-stats | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -17869,7 +17866,7 @@ _dune_package__print-solver-env() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18051,7 +18048,7 @@ _dune_package__print-solver-env() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -18094,7 +18091,7 @@ _dune_package__outdated() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --transitive --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18264,7 +18261,7 @@ _dune_package__outdated() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages)
+        --help | -h | --transitive | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -18307,7 +18304,7 @@ _dune_package__validate-lockdir() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18489,7 +18486,7 @@ _dune_package__validate-lockdir() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -18521,7 +18518,7 @@ _dune_package() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18544,7 +18541,7 @@ _dune_package() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         lock)
@@ -18603,7 +18600,7 @@ _dune_tools__exec__ocamlformat() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18781,7 +18778,7 @@ _dune_tools__exec__ocamlformat() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -18824,7 +18821,7 @@ _dune_tools__exec__ocamllsp() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -18996,7 +18993,7 @@ _dune_tools__exec__ocamllsp() {
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -19028,7 +19025,7 @@ _dune_tools__exec() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -19051,7 +19048,7 @@ _dune_tools__exec() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         ocamlformat)
@@ -19077,7 +19074,7 @@ _dune_tools__exec() {
   done
 }
 
-_dune_tools() {
+_dune_tools__which__ocamlformat() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
     if _dune_comp_words_traverse_is_past_cursor; then
@@ -19085,13 +19082,434 @@ _dune_tools() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "exec"
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: ocamlformat which tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamlformat which tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamlformat which tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamlformat which tools
+            # --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamlformat which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamlformat which tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamlformat which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamlformat which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamlformat which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamlformat which tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamlformat which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamlformat which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamlformat which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamlformat which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamlformat which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamlformat which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamlformat which tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamlformat which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamlformat which tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamlformat which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamlformat which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamlformat which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamlformat which tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamlformat which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamlformat which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamlformat which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamlformat which tools
+            # --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamlformat which tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which__ocamllsp() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: ocamllsp which tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamllsp which tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamllsp which tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamllsp which tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamllsp which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamllsp which tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamllsp which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamllsp which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamllsp which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamllsp which tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamllsp which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamllsp which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamllsp which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamllsp which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamllsp which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamllsp which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamllsp which tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamllsp which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamllsp which tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamllsp which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamllsp which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamllsp which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamllsp which tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamllsp which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamllsp which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamllsp which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamllsp which tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamllsp which tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      _dune_add_reply_fixed "$2" "ocamlformat ocamllsp"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -19114,11 +19532,78 @@ _dune_tools() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        ocamlformat)
+          _dune_tools__which__ocamlformat "$1" "$2" "$3"
+          return "$?"
+          ;;
+        ocamllsp)
+          _dune_tools__which__ocamllsp "$1" "$2" "$3"
+          return "$?"
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      _dune_add_reply_fixed "$2" "exec which"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         exec)
           _dune_tools__exec "$1" "$2" "$3"
+          return "$?"
+          ;;
+        which)
+          _dune_tools__which "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -19150,7 +19635,7 @@ _dune_() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--help -h"
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -19173,7 +19658,7 @@ _dune_() {
         esac
       fi
       case "$current_word" in
-        --help | -h)
+        --help | -h | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         runtest)
