@@ -64,7 +64,7 @@ _dune_n() {
 while IFS= read -r l; do
 COMPREPLY+=( "$l" )
 done < <(compgen -A file -- "$1")
-type compot &> /dev/null && complopt -o filenames
+type compopt &> /dev/null && compopt -o filenames
 }
 _dune_o() {
 COMPREPLY+=($(compgen -W "$2" -- "$1"))

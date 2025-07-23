@@ -85,7 +85,7 @@ _dune_add_reply_files() {
   # ergonomic improvements such as appending a slash to directories and
   # omitting the space after completions so completion of paths can continue
   # if the user presses tab again.
-  type compot &> /dev/null && complopt -o filenames
+  type compopt &> /dev/null && compopt -o filenames
 }
 
 _dune_add_reply_fixed() {
