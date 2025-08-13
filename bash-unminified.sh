@@ -960,7 +960,7 @@ _dune_build() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --alias --alias-rec --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -980,6 +980,11 @@ _dune_build() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
+          --alias-rec)
+            # completions for: build --alias-rec
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
           --debug-cache)
             # completions for: build --debug-cache
             _dune_add_reply_files "$2"
@@ -1120,10 +1125,15 @@ _dune_build() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --alias)
+            # completions for: build --alias
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
+        --help | -h | --alias-rec | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --alias | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -10060,17 +10070,6 @@ _dune_describe__contexts() {
   done
 }
 
-_dune_describe__depexts__complete_positional_args() {
-  # Takes the portion of the word under the cursor before the cursor and the
-  # index of the current positional argument on the command line and adds comp
-  # replies for that positional argument begining with that prefix.
-  case "$2" in
-    *)
-      _dune_add_reply_files "$1"
-      ;;
-  esac
-}
-
 _dune_describe__depexts() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -10081,11 +10080,12 @@ _dune_describe__depexts() {
       # Try to complete subcommands and positional arguments first.
       # This is where we would add completions for subcommands however
       # this command has no subcommands.
-      _dune_describe__depexts__complete_positional_args "$2" "$positional_argument_index"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -10252,10 +10252,234 @@ _dune_describe__depexts() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --context)
+            # completions for: depexts describe --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_describe__location__complete_positional_args() {
+  # Takes the portion of the word under the cursor before the cursor and the
+  # index of the current positional argument on the command line and adds comp
+  # replies for that positional argument begining with that prefix.
+  case "$2" in
+    0)
+      _dune_add_reply_files "$1"
+      ;;
+  esac
+}
+
+_dune_describe__location() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      _dune_describe__location__complete_positional_args "$2" "$positional_argument_index"
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --context)
+            # completions for: location describe --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: location describe --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: location describe --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: location describe --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: location describe --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: location describe --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: location describe --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: location describe
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: location describe --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: location describe --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: location describe --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: location describe
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: location describe --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: location describe
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: location describe
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: location describe --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: location describe
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: location describe -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: location describe --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: location describe
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: location describe
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: location describe --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: location describe
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: location describe --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: location describe -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: location describe --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: location describe --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: location describe --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: location describe --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -10292,7 +10516,7 @@ _dune_describe() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts"
+      _dune_add_reply_fixed "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts location"
       _dune_describe__complete_positional_args "$2" "$positional_argument_index"
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
@@ -10528,6 +10752,10 @@ _dune_describe() {
           ;;
         depexts)
           _dune_describe__depexts "$1" "$2" "$3"
+          return "$?"
+          ;;
+        location)
+          _dune_describe__location "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -13639,17 +13867,6 @@ _dune_show__contexts() {
   done
 }
 
-_dune_show__depexts__complete_positional_args() {
-  # Takes the portion of the word under the cursor before the cursor and the
-  # index of the current positional argument on the command line and adds comp
-  # replies for that positional argument begining with that prefix.
-  case "$2" in
-    *)
-      _dune_add_reply_files "$1"
-      ;;
-  esac
-}
-
 _dune_show__depexts() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -13660,11 +13877,12 @@ _dune_show__depexts() {
       # Try to complete subcommands and positional arguments first.
       # This is where we would add completions for subcommands however
       # this command has no subcommands.
-      _dune_show__depexts__complete_positional_args "$2" "$positional_argument_index"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -13828,10 +14046,231 @@ _dune_show__depexts() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
+          --context)
+            # completions for: depexts show --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --context | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_show__location__complete_positional_args() {
+  # Takes the portion of the word under the cursor before the cursor and the
+  # index of the current positional argument on the command line and adds comp
+  # replies for that positional argument begining with that prefix.
+  case "$2" in
+    0)
+      _dune_add_reply_files "$1"
+      ;;
+  esac
+}
+
+_dune_show__location() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      _dune_show__location__complete_positional_args "$2" "$positional_argument_index"
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --context --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --context)
+            # completions for: location show --context
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: location show --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: location show --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: location show --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: location show --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: location show --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: location show --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: location show
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: location show --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: location show --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: location show --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: location show --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: location show --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: location show
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: location show
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: location show --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: location show --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: location show -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: location show --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: location show --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: location show
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: location show --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: location show
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: location show --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: location show -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: location show --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: location show --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: location show --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: location show --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --context | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -13857,7 +14296,7 @@ _dune_show() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts"
+      _dune_add_reply_fixed "$2" "workspace external-lib-deps opam-files pp env rules installed-libraries targets aliases package-entries pkg contexts depexts location"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -13939,6 +14378,10 @@ _dune_show() {
           ;;
         depexts)
           _dune_show__depexts "$1" "$2" "$3"
+          return "$?"
+          ;;
+        location)
+          _dune_show__location "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -17565,6 +18008,205 @@ _dune_pkg__validate-lockdir() {
   done
 }
 
+_dune_pkg__enabled() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: enabled pkg --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: enabled pkg --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: enabled pkg --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: enabled pkg --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: enabled pkg --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: enabled pkg --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: enabled pkg
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: enabled pkg --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: enabled pkg --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: enabled pkg --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: enabled pkg --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: enabled pkg --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: enabled pkg
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: enabled pkg --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: enabled pkg --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: enabled pkg --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: enabled pkg -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: enabled pkg --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: enabled pkg --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: enabled pkg
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: enabled pkg --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: enabled pkg --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: enabled pkg --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: enabled pkg -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: enabled pkg --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: enabled pkg --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: enabled pkg --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: enabled pkg --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
 _dune_pkg() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -17573,7 +18215,7 @@ _dune_pkg() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "lock print-solver-env outdated validate-lockdir"
+      _dune_add_reply_fixed "$2" "lock print-solver-env outdated validate-lockdir enabled"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -17619,6 +18261,10 @@ _dune_pkg() {
           ;;
         validate-lockdir)
           _dune_pkg__validate-lockdir "$1" "$2" "$3"
+          return "$?"
+          ;;
+        enabled)
+          _dune_pkg__enabled "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -18514,6 +19160,209 @@ _dune_package__validate-lockdir() {
   done
 }
 
+_dune_package__enabled() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: enabled package --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: enabled package --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: enabled package --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: enabled package --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: enabled package --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: enabled package --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: enabled package
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: enabled package --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: enabled package --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: enabled package --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: enabled package
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: enabled package --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: enabled package
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: enabled package
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: enabled package --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: enabled package
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: enabled package -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: enabled package --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: enabled package --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: enabled package
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: enabled package --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: enabled package
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: enabled package --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: enabled package -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: enabled package --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: enabled package --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: enabled package --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: enabled package --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
 _dune_package() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -18522,7 +19371,7 @@ _dune_package() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "lock print-solver-env outdated validate-lockdir"
+      _dune_add_reply_fixed "$2" "lock print-solver-env outdated validate-lockdir enabled"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -18568,6 +19417,10 @@ _dune_package() {
           ;;
         validate-lockdir)
           _dune_package__validate-lockdir "$1" "$2" "$3"
+          return "$?"
+          ;;
+        enabled)
+          _dune_package__enabled "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -19021,6 +19874,232 @@ _dune_tools__exec__ocamllsp() {
   done
 }
 
+_dune_tools__exec__ocamlearlybird__complete_positional_args() {
+  # Takes the portion of the word under the cursor before the cursor and the
+  # index of the current positional argument on the command line and adds comp
+  # replies for that positional argument begining with that prefix.
+  case "$2" in
+    *)
+      _dune_add_reply_files "$1"
+      ;;
+  esac
+}
+
+_dune_tools__exec__ocamlearlybird() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      _dune_tools__exec__ocamlearlybird__complete_positional_args "$2" "$positional_argument_index"
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: ocamlearlybird exec tools
+            # --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamlearlybird exec tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamlearlybird exec tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamlearlybird exec tools
+            # --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamlearlybird exec tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamlearlybird exec tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamlearlybird exec tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamlearlybird exec tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamlearlybird exec tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamlearlybird exec tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamlearlybird exec tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamlearlybird exec tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamlearlybird exec tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamlearlybird exec tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamlearlybird exec tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamlearlybird exec tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamlearlybird exec tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamlearlybird exec tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamlearlybird exec tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamlearlybird exec tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamlearlybird exec tools
+            # --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamlearlybird exec tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamlearlybird exec tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamlearlybird exec tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamlearlybird exec tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamlearlybird exec tools
+            # --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamlearlybird exec tools
+            # --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamlearlybird exec tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
 _dune_tools__exec() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
@@ -19029,7 +20108,7 @@ _dune_tools__exec() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "ocamlformat ocamllsp"
+      _dune_add_reply_fixed "$2" "ocamlformat ocamllsp ocamlearlybird"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -19069,6 +20148,10 @@ _dune_tools__exec() {
           _dune_tools__exec__ocamllsp "$1" "$2" "$3"
           return "$?"
           ;;
+        ocamlearlybird)
+          _dune_tools__exec__ocamlearlybird "$1" "$2" "$3"
+          return "$?"
+          ;;
         -*)
           # Ignore other words that look like arguments
           prev_word_was_named_argumen_with_value=0
@@ -19084,7 +20167,7 @@ _dune_tools__exec() {
   done
 }
 
-_dune_tools__which__ocamlformat() {
+_dune_tools__install__ocamlformat() {
   local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
   while true; do
     if _dune_comp_words_traverse_is_past_cursor; then
@@ -19120,148 +20203,1137 @@ _dune_tools__which__ocamlformat() {
         # complete it and then exit.
         case "$current_word" in
           --error-reporting)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --error-reporting
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --file-watcher)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --file-watcher
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --trace-file)
-            # completions for: ocamlformat which tools --trace-file
+            # completions for: ocamlformat install tools
+            # --trace-file
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --build-dir)
-            # completions for: ocamlformat which tools --build-dir
+            # completions for: ocamlformat install tools --build-dir
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --profile)
-            # completions for: ocamlformat which tools --profile
+            # completions for: ocamlformat install tools --profile
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --only-packages)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --only-packages
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --require-dune-project-file)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --require-dune-project-file
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --config-file)
-            # completions for: ocamlformat which tools --config-file
+            # completions for: ocamlformat install tools
+            # --config-file
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --root)
-            # completions for: ocamlformat which tools --root
+            # completions for: ocamlformat install tools --root
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --default-target)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --default-target
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --promote-install-files)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --promote-install-files
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --dump-memo-graph)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --dump-memo-graph
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --action-stderr-on-success)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --action-stderr-on-success
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --cache-check-probability)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --cache-check-probability
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --cache)
-            # completions for: ocamlformat which tools --cache
+            # completions for: ocamlformat install tools --cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --terminal-persistence)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --terminal-persistence
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           -j)
-            # completions for: ocamlformat which tools -j
+            # completions for: ocamlformat install tools -j
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --sandbox)
-            # completions for: ocamlformat which tools --sandbox
+            # completions for: ocamlformat install tools --sandbox
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --cache-storage-mode)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --cache-storage-mode
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --action-stdout-on-success)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --action-stdout-on-success
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --workspace)
-            # completions for: ocamlformat which tools --workspace
+            # completions for: ocamlformat install tools --workspace
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --dump-memo-graph-format)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --dump-memo-graph-format
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --dump-gc-stats)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --dump-gc-stats
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           -x)
-            # completions for: ocamlformat which tools -x
+            # completions for: ocamlformat install tools -x
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --diff-command)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --diff-command
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
           --instrument-with)
-            # completions for: ocamlformat which tools
+            # completions for: ocamlformat install tools
             # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamlformat install tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: ocamlformat install tools
+            # --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__install__odoc() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: odoc install tools --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: odoc install tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: odoc install tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: odoc install tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: odoc install tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: odoc install tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: odoc install tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: odoc install tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: odoc install tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: odoc install tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: odoc install tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: odoc install tools --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: odoc install tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: odoc install tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: odoc install tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: odoc install tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: odoc install tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: odoc install tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: odoc install tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: odoc install tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: odoc install tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: odoc install tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: odoc install tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: odoc install tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: odoc install tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: odoc install tools --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: odoc install tools --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: odoc install tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__install__ocamllsp() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: ocamllsp install tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamllsp install tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamllsp install tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamllsp install tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamllsp install tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamllsp install tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamllsp install tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamllsp install tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamllsp install tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamllsp install tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamllsp install tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamllsp install tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamllsp install tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamllsp install tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamllsp install tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamllsp install tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamllsp install tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamllsp install tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamllsp install tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamllsp install tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamllsp install tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamllsp install tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamllsp install tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamllsp install tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamllsp install tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamllsp install tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamllsp install tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: ocamllsp install tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__install__utop() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: utop install tools --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: utop install tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: utop install tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: utop install tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: utop install tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: utop install tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: utop install tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: utop install tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: utop install tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: utop install tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: utop install tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: utop install tools --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: utop install tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: utop install tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: utop install tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: utop install tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: utop install tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: utop install tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: utop install tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: utop install tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: utop install tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: utop install tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: utop install tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: utop install tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: utop install tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: utop install tools --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: utop install tools --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: utop install tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__install__ocamlearlybird() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --error-reporting)
+            # completions for: ocamlearlybird install tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamlearlybird install tools
+            # --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamlearlybird install tools
+            # --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamlearlybird install tools
+            # --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamlearlybird install tools
+            # --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamlearlybird install tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamlearlybird install tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamlearlybird install tools
+            # --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamlearlybird install tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamlearlybird install tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamlearlybird install tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamlearlybird install tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamlearlybird install tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamlearlybird install tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamlearlybird install tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamlearlybird install tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamlearlybird install tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamlearlybird install tools
+            # --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamlearlybird install tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamlearlybird install tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamlearlybird install tools
+            # --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamlearlybird install tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamlearlybird install tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamlearlybird install tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamlearlybird install tools
+            # --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamlearlybird install tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamlearlybird install tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --debug-cache)
+            # completions for: ocamlearlybird install tools
+            # --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__install() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      _dune_add_reply_fixed "$2" "ocamlformat odoc ocamllsp utop ocamlearlybird"
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--help --manpage -h"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        ocamlformat)
+          _dune_tools__install__ocamlformat "$1" "$2" "$3"
+          return "$?"
+          ;;
+        odoc)
+          _dune_tools__install__odoc "$1" "$2" "$3"
+          return "$?"
+          ;;
+        ocamllsp)
+          _dune_tools__install__ocamllsp "$1" "$2" "$3"
+          return "$?"
+          ;;
+        utop)
+          _dune_tools__install__utop "$1" "$2" "$3"
+          return "$?"
+          ;;
+        ocamlearlybird)
+          _dune_tools__install__ocamlearlybird "$1" "$2" "$3"
+          return "$?"
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which__ocamlformat() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: ocamlformat which tools --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -19271,15 +21343,359 @@ _dune_tools__which__ocamlformat() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: ocamlformat which tools --debug-cache
+          --instrument-with)
+            # completions for: ocamlformat which tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamlformat which tools
+            # --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamlformat which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamlformat which tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamlformat which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamlformat which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamlformat which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamlformat which tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamlformat which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamlformat which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamlformat which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamlformat which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamlformat which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamlformat which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamlformat which tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamlformat which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamlformat which tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamlformat which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamlformat which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamlformat which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamlformat which tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamlformat which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamlformat which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamlformat which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamlformat which tools
+            # --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamlformat which tools
+            # --error-reporting
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which__odoc() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: odoc which tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: odoc which tools --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: odoc which tools --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: odoc which tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: odoc which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: odoc which tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: odoc which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: odoc which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: odoc which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: odoc which tools --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: odoc which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: odoc which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: odoc which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: odoc which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: odoc which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: odoc which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: odoc which tools --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: odoc which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: odoc which tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: odoc which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: odoc which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: odoc which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: odoc which tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: odoc which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: odoc which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: odoc which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: odoc which tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: odoc which tools --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -19312,7 +21728,7 @@ _dune_tools__which__ocamllsp() {
       if [ "${#COMPREPLY[@]}" == "0" ]; then
         # If there were no suggestions for subcommands or positional
         # arguments, try completing named arguments instead.
-        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
       fi
       return "$_dune_STATUS_DONE"
     else
@@ -19332,144 +21748,8 @@ _dune_tools__which__ocamllsp() {
         # The parser has reached the word under the cursor. Attempt to
         # complete it and then exit.
         case "$current_word" in
-          --error-reporting)
-            # completions for: ocamllsp which tools
-            # --error-reporting
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --file-watcher)
-            # completions for: ocamllsp which tools --file-watcher
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --trace-file)
-            # completions for: ocamllsp which tools --trace-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --build-dir)
-            # completions for: ocamllsp which tools --build-dir
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --profile)
-            # completions for: ocamllsp which tools --profile
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --only-packages)
-            # completions for: ocamllsp which tools --only-packages
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --require-dune-project-file)
-            # completions for: ocamllsp which tools
-            # --require-dune-project-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --config-file)
-            # completions for: ocamllsp which tools --config-file
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --root)
-            # completions for: ocamllsp which tools --root
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --default-target)
-            # completions for: ocamllsp which tools --default-target
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --promote-install-files)
-            # completions for: ocamllsp which tools
-            # --promote-install-files
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph)
-            # completions for: ocamllsp which tools
-            # --dump-memo-graph
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stderr-on-success)
-            # completions for: ocamllsp which tools
-            # --action-stderr-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-check-probability)
-            # completions for: ocamllsp which tools
-            # --cache-check-probability
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache)
-            # completions for: ocamllsp which tools --cache
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --terminal-persistence)
-            # completions for: ocamllsp which tools
-            # --terminal-persistence
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -j)
-            # completions for: ocamllsp which tools -j
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --sandbox)
-            # completions for: ocamllsp which tools --sandbox
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --cache-storage-mode)
-            # completions for: ocamllsp which tools
-            # --cache-storage-mode
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --action-stdout-on-success)
-            # completions for: ocamllsp which tools
-            # --action-stdout-on-success
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --workspace)
-            # completions for: ocamllsp which tools --workspace
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-memo-graph-format)
-            # completions for: ocamllsp which tools
-            # --dump-memo-graph-format
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --dump-gc-stats)
-            # completions for: ocamllsp which tools --dump-gc-stats
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          -x)
-            # completions for: ocamllsp which tools -x
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --diff-command)
-            # completions for: ocamllsp which tools --diff-command
-            _dune_add_reply_files "$2"
-            return "$_dune_STATUS_DONE"
-            ;;
-          --instrument-with)
-            # completions for: ocamllsp which tools
-            # --instrument-with
+          --debug-cache)
+            # completions for: ocamllsp which tools --debug-cache
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
@@ -19479,15 +21759,572 @@ _dune_tools__which__ocamllsp() {
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
-          --debug-cache)
-            # completions for: ocamllsp which tools --debug-cache
+          --instrument-with)
+            # completions for: ocamllsp which tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamllsp which tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamllsp which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamllsp which tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamllsp which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamllsp which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamllsp which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamllsp which tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamllsp which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamllsp which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamllsp which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamllsp which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamllsp which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamllsp which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamllsp which tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamllsp which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamllsp which tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamllsp which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamllsp which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamllsp which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamllsp which tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamllsp which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamllsp which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamllsp which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamllsp which tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamllsp which tools
+            # --error-reporting
             _dune_add_reply_files "$2"
             return "$_dune_STATUS_DONE"
             ;;
         esac
       fi
       case "$current_word" in
-        --help | -h | --stop-on-first-error | --error-reporting | --wait-for-filesystem-clock | --file-watcher | --build-info | --no-print-directory | --trace-file | --build-dir | --profile | --only-packages | --require-dune-project-file | --always-show-command-line | --config-file | --root | --ignore-promoted-rules | --default-target | --promote-install-files | --ignore-lock-dir | --release | --dump-memo-graph-with-timing | --dump-memo-graph | --watch | -w | --auto-promote | --no-buffer | --debug-digests | --debug-artifact-substitution | --debug-dependency-path | --action-stderr-on-success | --cache-check-probability | --cache | --terminal-persistence | -j | --sandbox | --verbose | --cache-storage-mode | --action-stdout-on-success | --debug-backtraces | --debug-load-dir | --debug-package-logs | --workspace | --force | -f | --print-metrics | --dump-memo-graph-format | --dump-gc-stats | -x | --diff-command | --trace-extended | --store-orig-source-dir | --instrument-with | --watch-exclusions | --debug-cache | --display-separate-messages | --manpage)
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which__utop() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: utop which tools --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: utop which tools --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: utop which tools --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: utop which tools --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: utop which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: utop which tools --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: utop which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: utop which tools --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: utop which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: utop which tools --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: utop which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: utop which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: utop which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: utop which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: utop which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: utop which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: utop which tools --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: utop which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: utop which tools --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: utop which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: utop which tools --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: utop which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: utop which tools --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: utop which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: utop which tools --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: utop which tools --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: utop which tools --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: utop which tools --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
+          prev_word_was_named_argumen_with_value=1
+          ;;
+        -*)
+          # Ignore other words that look like arguments
+          prev_word_was_named_argumen_with_value=0
+          ;;
+        *)
+          if [ "$prev_word_was_named_argumen_with_value" -eq 0 ]; then
+            positional_argument_index=$((positional_argument_index+1))
+          fi
+          prev_word_was_named_argumen_with_value=0
+          ;;
+      esac
+    fi
+  done
+}
+
+_dune_tools__which__ocamlearlybird() {
+  local prev_word_was_named_argumen_with_value="0" positional_argument_index="0"
+  while true; do
+    if _dune_comp_words_traverse_is_past_cursor; then
+      return "$_dune_WORD_INDEX_PAST_CURSOR"
+    fi
+    if _dune_comp_words_traverse_is_at_cursor; then
+      # Try to complete subcommands and positional arguments first.
+      # This is where we would add completions for subcommands however
+      # this command has no subcommands.
+      # This is where we would add completions for positional arguments,
+      # however this command has no positional arguments
+      if [ "${#COMPREPLY[@]}" == "0" ]; then
+        # If there were no suggestions for subcommands or positional
+        # arguments, try completing named arguments instead.
+        _dune_add_reply_fixed "$2" "--action-stderr-on-success --action-stdout-on-success --allow-not-installed --always-show-command-line --auto-promote --build-dir --build-info --cache --cache-check-probability --cache-storage-mode --config-file --debug-artifact-substitution --debug-backtraces --debug-cache --debug-dependency-path --debug-digests --debug-load-dir --debug-package-logs --default-target --diff-command --display-separate-messages --dump-gc-stats --dump-memo-graph --dump-memo-graph-format --dump-memo-graph-with-timing --error-reporting --file-watcher --force --help --ignore-lock-dir --ignore-promoted-rules --instrument-with --manpage --no-buffer --no-print-directory --only-packages --print-metrics --profile --promote-install-files --release --require-dune-project-file --root --sandbox --stop-on-first-error --store-orig-source-dir --terminal-persistence --trace-extended --trace-file --verbose --wait-for-filesystem-clock --watch --watch-exclusions --workspace -f -h -j -w -x"
+      fi
+      return "$_dune_STATUS_DONE"
+    else
+      local current_word status_
+      current_word=$(_dune_comp_words_traverse_get_current)
+      status_=$?
+      if [ "$status_" -ne 0 ]; then
+        return "$status_"
+      fi
+      _dune_comp_words_traverse_advance
+      if _dune_comp_words_traverse_is_past_cursor; then
+        # Bounds check to catch errors in the implementation of the
+        # completion script
+        return "$_dune_WORD_INDEX_PAST_CURSOR"
+      fi
+      if _dune_comp_words_traverse_is_at_cursor; then
+        # The parser has reached the word under the cursor. Attempt to
+        # complete it and then exit.
+        case "$current_word" in
+          --debug-cache)
+            # completions for: ocamlearlybird which tools
+            # --debug-cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --watch-exclusions)
+            # completions for: ocamlearlybird which tools
+            # --watch-exclusions
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --instrument-with)
+            # completions for: ocamlearlybird which tools
+            # --instrument-with
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --diff-command)
+            # completions for: ocamlearlybird which tools
+            # --diff-command
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -x)
+            # completions for: ocamlearlybird which tools -x
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-gc-stats)
+            # completions for: ocamlearlybird which tools
+            # --dump-gc-stats
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph-format)
+            # completions for: ocamlearlybird which tools
+            # --dump-memo-graph-format
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --workspace)
+            # completions for: ocamlearlybird which tools
+            # --workspace
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stdout-on-success)
+            # completions for: ocamlearlybird which tools
+            # --action-stdout-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-storage-mode)
+            # completions for: ocamlearlybird which tools
+            # --cache-storage-mode
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --sandbox)
+            # completions for: ocamlearlybird which tools --sandbox
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          -j)
+            # completions for: ocamlearlybird which tools -j
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --terminal-persistence)
+            # completions for: ocamlearlybird which tools
+            # --terminal-persistence
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache)
+            # completions for: ocamlearlybird which tools --cache
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --cache-check-probability)
+            # completions for: ocamlearlybird which tools
+            # --cache-check-probability
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --action-stderr-on-success)
+            # completions for: ocamlearlybird which tools
+            # --action-stderr-on-success
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --dump-memo-graph)
+            # completions for: ocamlearlybird which tools
+            # --dump-memo-graph
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --promote-install-files)
+            # completions for: ocamlearlybird which tools
+            # --promote-install-files
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --default-target)
+            # completions for: ocamlearlybird which tools
+            # --default-target
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --root)
+            # completions for: ocamlearlybird which tools --root
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --config-file)
+            # completions for: ocamlearlybird which tools
+            # --config-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --require-dune-project-file)
+            # completions for: ocamlearlybird which tools
+            # --require-dune-project-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --only-packages)
+            # completions for: ocamlearlybird which tools
+            # --only-packages
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --profile)
+            # completions for: ocamlearlybird which tools --profile
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --build-dir)
+            # completions for: ocamlearlybird which tools
+            # --build-dir
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --trace-file)
+            # completions for: ocamlearlybird which tools
+            # --trace-file
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --file-watcher)
+            # completions for: ocamlearlybird which tools
+            # --file-watcher
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+          --error-reporting)
+            # completions for: ocamlearlybird which tools
+            # --error-reporting
+            _dune_add_reply_files "$2"
+            return "$_dune_STATUS_DONE"
+            ;;
+        esac
+      fi
+      case "$current_word" in
+        --help | -h | --display-separate-messages | --debug-cache | --watch-exclusions | --instrument-with | --store-orig-source-dir | --trace-extended | --diff-command | -x | --dump-gc-stats | --dump-memo-graph-format | --print-metrics | --force | -f | --workspace | --debug-package-logs | --debug-load-dir | --debug-backtraces | --action-stdout-on-success | --cache-storage-mode | --verbose | --sandbox | -j | --terminal-persistence | --cache | --cache-check-probability | --action-stderr-on-success | --debug-dependency-path | --debug-artifact-substitution | --debug-digests | --no-buffer | --auto-promote | --watch | -w | --dump-memo-graph | --dump-memo-graph-with-timing | --release | --ignore-lock-dir | --promote-install-files | --default-target | --ignore-promoted-rules | --root | --config-file | --always-show-command-line | --require-dune-project-file | --only-packages | --profile | --build-dir | --trace-file | --no-print-directory | --build-info | --file-watcher | --wait-for-filesystem-clock | --error-reporting | --stop-on-first-error | --allow-not-installed | --manpage)
           prev_word_was_named_argumen_with_value=1
           ;;
         -*)
@@ -19513,7 +22350,7 @@ _dune_tools__which() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "ocamlformat ocamllsp"
+      _dune_add_reply_fixed "$2" "ocamlformat odoc ocamllsp utop ocamlearlybird"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -19549,8 +22386,20 @@ _dune_tools__which() {
           _dune_tools__which__ocamlformat "$1" "$2" "$3"
           return "$?"
           ;;
+        odoc)
+          _dune_tools__which__odoc "$1" "$2" "$3"
+          return "$?"
+          ;;
         ocamllsp)
           _dune_tools__which__ocamllsp "$1" "$2" "$3"
+          return "$?"
+          ;;
+        utop)
+          _dune_tools__which__utop "$1" "$2" "$3"
+          return "$?"
+          ;;
+        ocamlearlybird)
+          _dune_tools__which__ocamlearlybird "$1" "$2" "$3"
           return "$?"
           ;;
         -*)
@@ -19576,7 +22425,7 @@ _dune_tools() {
     fi
     if _dune_comp_words_traverse_is_at_cursor; then
       # Try to complete subcommands and positional arguments first.
-      _dune_add_reply_fixed "$2" "exec which"
+      _dune_add_reply_fixed "$2" "exec install which"
       # This is where we would add completions for positional arguments,
       # however this command has no positional arguments
       if [ "${#COMPREPLY[@]}" == "0" ]; then
@@ -19610,6 +22459,10 @@ _dune_tools() {
           ;;
         exec)
           _dune_tools__exec "$1" "$2" "$3"
+          return "$?"
+          ;;
+        install)
+          _dune_tools__install "$1" "$2" "$3"
           return "$?"
           ;;
         which)
